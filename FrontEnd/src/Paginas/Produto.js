@@ -135,7 +135,7 @@ const Produto = () => {
           <thead>
             <tr style={{ backgroundColor: '#f0f0f0' }}>
               <th>Produto</th>
-              <th>Qtd</th>
+              <th>Quantidade</th>
               <th>Valor</th>
               <th>Status</th>
               <th>Ação</th>
