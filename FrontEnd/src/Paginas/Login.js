@@ -7,72 +7,66 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-   const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await api.post('/auth/login', { email, password });
-    
-    // ✅ Pega o nome retornado pelo backend
-    const nomeUsuario = response.data.name;
-
-    if (!nomeUsuario) {
-      alert('Erro: usuário sem nome');
-      return;
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      sessionStorage.setItem('usuario', response.data.name);
+      alert('Login realizado com sucesso!');
+      navigate('/produto');
+    } catch (error) {
+      alert('Email ou senha inválidos');
     }
-
-    // ✅ Salva o nome 
-    sessionStorage.setItem('usuario', nomeUsuario);
-    
-    alert('Login realizado com sucesso!');
-    navigate('/produto');
-  } catch (error) {
-    alert('Email ou senha inválidos');
-  }
-};
+  };
 
   return (
     <div style={pageContainer}>
-      {}
-      <div style={container}>
-        <div style={card}>
-          <h2 style={title}>Login</h2>
-
-          <form onSubmit={handleLogin}>
-            <div style={inputGroup}>
-              <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Seu email"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <div style={inputGroup}>
-              <label>Senha</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Sua senha"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <button type="submit" style={buttonStyle}>Entrar</button>
-          </form>
-
-          {}
-          <div style={linkSection}>
-            <p>
-              Não tem conta? <a href="/usuario" style={link}>Cadastre-se</a>
-            </p>
-          </div>
+      {/* Navbar */}
+      <nav style={navStyle}>
+        <div style={navBrand}>🔷 Estoque Fácil</div>
+        <div style={navLinks}>
+          <span style={navUser}>Sistema de Controle de Estoque</span>
         </div>
+      </nav>
+
+      <div style={card}>
+        <h2 style={title}>Entrar no Sistema</h2>
+        <p style={subtitle}>Controle de Estoque - ADS</p>
+
+        <form onSubmit={handleLogin} style={form}>
+          <div style={inputGroup}>
+            <label style={labelStyle}>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="seu@email.com"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          <div style={inputGroup}>
+            <label style={labelStyle}>Senha</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Sua senha"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          <button type="submit" style={btnPrimary}>Entrar</button>
+        </form>
+
+        <p style={linkSection}>
+          Não tem conta?{' '}
+          <a href="/usuario" style={link}>Cadastre-se</a>
+        </p>
       </div>
 
-      {}
       <footer style={footerStyle}>
         Sistema de Controle de Estoque - Projeto Acadêmico ADS
       </footer>
@@ -83,74 +77,116 @@ const Login = () => {
 
 const pageContainer = {
   minHeight: '100vh',
+  backgroundColor: '#f0f4f8',
   display: 'flex',
-  flexDirection: 'column',
-  backgroundColor: '#f0f2f5'
+  flexDirection: 'column'
 };
 
-const container = {
-  flex: 1,
+const navStyle = {
+  padding: '12px 20px',
+  backgroundColor: '#ffffff',
+  borderBottom: '1px solid #ddd',
   display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '20px'
+  justifyContent: 'space-between',
+  alignItems: 'center'
+};
+
+const navBrand = {
+  fontWeight: 'bold',
+  color: '#003366',
+  fontSize: '18px'
+};
+
+const navLinks = {
+  display: 'flex',
+  gap: '20px',
+  alignItems: 'center'
+};
+
+const navUser = {
+  color: '#555',
+  fontSize: '14px'
 };
 
 const card = {
   backgroundColor: 'white',
   padding: '30px',
-  borderRadius: '8px',
+  borderRadius: '10px',
   width: '100%',
   maxWidth: '400px',
-  boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+  margin: '40px auto',
+  boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+  textAlign: 'center'
 };
 
 const title = {
-  textAlign: 'center',
-  color: '#333',
+  color: '#003366',
+  marginBottom: '5px',
+  fontSize: '24px'
+};
+
+const subtitle = {
+  color: '#666',
+  fontSize: '14px',
   marginBottom: '20px'
 };
 
+const form = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '15px'
+};
+
 const inputGroup = {
-  marginBottom: '15px'
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start'
+};
+
+const labelStyle = {
+  fontSize: '14px',
+  color: '#555',
+  marginBottom: '5px'
 };
 
 const inputStyle = {
   width: '100%',
   padding: '10px',
-  border: '1px solid #ddd',
-  borderRadius: '4px',
+  border: '1px solid #ccc',
+  borderRadius: '6px',
   fontSize: '14px'
 };
 
-const buttonStyle = {
-  width: '100%',
-  padding: '12px',
-  backgroundColor: '#1877f2',
+const btnPrimary = {
+  background: '#003366',
   color: 'white',
   border: 'none',
-  borderRadius: '4px',
+  padding: '12px',
+  borderRadius: '6px',
   fontSize: '16px',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  marginTop: '10px'
 };
 
 const linkSection = {
-  textAlign: 'center',
   marginTop: '20px',
   fontSize: '14px',
   color: '#555'
 };
 
 const link = {
-  color: '#1877f2',
+  color: '#0066cc',
   textDecoration: 'none'
 };
 
 const footerStyle = {
   textAlign: 'center',
-  margin: '20px 0 10px',
+  padding: '20px 0',
+  color: '#777',
   fontSize: '12px',
-  color: '#777'
+  borderTop: '1px solid #eee',
+  backgroundColor: '#f8f9fa',
+  marginTop: 'auto'
 };
 
 export default Login;

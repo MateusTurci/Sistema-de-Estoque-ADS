@@ -3,11 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const Usuario = () => {
-  const [dados, setDados] = useState({
-    name: '',
-    email: '',
-    password: ''
-  });
+  const [dados, setDados] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,7 +13,6 @@ const Usuario = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!dados.name || !dados.email || !dados.password) {
       alert('Preencha todos os campos');
       return;
@@ -32,66 +27,73 @@ const Usuario = () => {
         alert(response.data.message);
       }
     } catch (error) {
-      alert('Falha ao cadastrar usuário. Tente novamente.');
+      alert('Falha ao cadastrar usuário');
     }
   };
 
   return (
     <div style={pageContainer}>
-      {/* Container centralizado */}
-      <div style={container}>
-        <div style={card}>
-          <h2 style={title}>Cadastrar Usuário</h2>
-
-          <form onSubmit={handleSubmit}>
-            <div style={inputGroup}>
-              <label>Nome Completo</label>
-              <input
-                type="text"
-                name="name"
-                value={dados.name}
-                onChange={handleChange}
-                placeholder="Seu nome"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <div style={inputGroup}>
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={dados.email}
-                onChange={handleChange}
-                placeholder="email@exemplo.com"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <div style={inputGroup}>
-              <label>Senha</label>
-              <input
-                type="password"
-                name="password"
-                value={dados.password}
-                onChange={handleChange}
-                placeholder="Sua senha"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <button type="submit" style={buttonStyle}>Cadastrar</button>
-          </form>
-
-          <div style={linkSection}>
-            <p>
-              Já tem conta? <a href="/" style={link}>Faça login</a>
-            </p>
-          </div>
+      {/* Navbar */}
+      <nav style={navStyle}>
+        <div style={navBrand}>🔷 Estoque Fácil</div>
+        <div style={navLinks}>
+          <span style={navUser}>Sistema de Controle de Estoque</span>
         </div>
+      </nav>
+
+      <div style={card}>
+        <h2 style={title}>Criar Conta</h2>
+        <p style={subtitle}>Preencha seus dados</p>
+
+        <form onSubmit={handleSubmit} style={form}>
+          <div style={inputGroup}>
+            <label style={labelStyle}>Nome Completo</label>
+            <input
+              type="text"
+              name="name"
+              value={dados.name}
+              onChange={handleChange}
+              placeholder="Seu nome"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          <div style={inputGroup}>
+            <label style={labelStyle}>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={dados.email}
+              onChange={handleChange}
+              placeholder="seu@email.com"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          <div style={inputGroup}>
+            <label style={labelStyle}>Senha</label>
+            <input
+              type="password"
+              name="password"
+              value={dados.password}
+              onChange={handleChange}
+              placeholder="Sua senha"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          <button type="submit" style={btnSuccess}>Cadastrar</button>
+        </form>
+
+        <p style={linkSection}>
+          Já tem conta?{' '}
+          <a href="/" style={link}>Faça login</a>
+        </p>
       </div>
 
-      {/* Footer fixo embaixo */}
       <footer style={footerStyle}>
         Sistema de Controle de Estoque - Projeto Acadêmico ADS
       </footer>
@@ -99,77 +101,119 @@ const Usuario = () => {
   );
 };
 
-// === ESTILOS ===
+
 const pageContainer = {
   minHeight: '100vh',
+  backgroundColor: '#f0f4f8',
   display: 'flex',
-  flexDirection: 'column',
-  backgroundColor: '#f0f2f5'
+  flexDirection: 'column'
 };
 
-const container = {
-  flex: 1,
+const navStyle = {
+  padding: '12px 20px',
+  backgroundColor: '#ffffff',
+  borderBottom: '1px solid #ddd',
   display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '20px'
+  justifyContent: 'space-between',
+  alignItems: 'center'
+};
+
+const navBrand = {
+  fontWeight: 'bold',
+  color: '#003366',
+  fontSize: '18px'
+};
+
+const navLinks = {
+  display: 'flex',
+  gap: '20px',
+  alignItems: 'center'
+};
+
+const navUser = {
+  color: '#555',
+  fontSize: '14px'
 };
 
 const card = {
   backgroundColor: 'white',
   padding: '30px',
-  borderRadius: '8px',
+  borderRadius: '10px',
   width: '100%',
   maxWidth: '400px',
-  boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+  margin: '40px auto',
+  boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+  textAlign: 'center'
 };
 
 const title = {
-  textAlign: 'center',
-  color: '#333',
+  color: '#003366',
+  marginBottom: '5px',
+  fontSize: '24px'
+};
+
+const subtitle = {
+  color: '#666',
+  fontSize: '14px',
   marginBottom: '20px'
 };
 
+const form = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '15px'
+};
+
 const inputGroup = {
-  marginBottom: '15px'
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start'
+};
+
+const labelStyle = {
+  fontSize: '14px',
+  color: '#555',
+  marginBottom: '5px'
 };
 
 const inputStyle = {
   width: '100%',
   padding: '10px',
-  border: '1px solid #ddd',
-  borderRadius: '4px',
+  border: '1px solid #ccc',
+  borderRadius: '6px',
   fontSize: '14px'
 };
 
-const buttonStyle = {
-  width: '100%',
-  padding: '12px',
-  backgroundColor: '#006600',
+const btnSuccess = {
+  background: '#006600',
   color: 'white',
   border: 'none',
-  borderRadius: '4px',
+  padding: '12px',
+  borderRadius: '6px',
   fontSize: '16px',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  marginTop: '10px'
 };
 
 const linkSection = {
-  textAlign: 'center',
   marginTop: '20px',
   fontSize: '14px',
   color: '#555'
 };
 
 const link = {
-  color: '#1877f2',
+  color: '#0066cc',
   textDecoration: 'none'
 };
 
 const footerStyle = {
   textAlign: 'center',
-  margin: '20px 0 10px',
+  padding: '20px 0',
+  color: '#777',
   fontSize: '12px',
-  color: '#777'
+  borderTop: '1px solid #eee',
+  backgroundColor: '#f8f9fa',
+  marginTop: 'auto'
 };
 
 export default Usuario;

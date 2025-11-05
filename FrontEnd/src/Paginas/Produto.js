@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const Produto = () => {
+  const navigate = useNavigate();
   const [values, setValues] = useState({ name: '', quantidade: '', valor: '' });
   const [produtos, setProdutos] = useState([]);
 
-  // Função para alterar os valores dos inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
-  // Cadastrar ou atualizar produto
   const handleSubmit = async (e) => {
     e.preventDefault();
     const nome = values.name.trim();
@@ -37,98 +37,97 @@ const Produto = () => {
     }
   };
 
-  // Excluir produto
   const handleDelete = async (nameProduto) => {
-    if (window.confirm(`Excluir o produto ${nameProduto}?`)) {
+    if (window.confirm(`Excluir o produto "${nameProduto}"?`)) {
       try {
-        await api.delete(`/produto?nameProduto=${encodeURIComponent(nameProduto)}`);
-        alert('Produto excluído');
+        const response = await api.delete(`/produto?nameProduto=${encodeURIComponent(nameProduto)}`);
+        alert(response.data.message);
         carregarProdutos();
       } catch (error) {
-        alert('Erro ao excluir');
+        alert('Erro ao excluir produto');
       }
     }
   };
 
-  // Carregar produtos do backend
   const carregarProdutos = async () => {
     try {
       const response = await api.get('/produtos');
-      setProdutos(response.data || []);
+      setProdutos(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.log('Erro ao carregar produtos');
     }
   };
 
-  // Carrega ao abrir a página
+  const logout = () => {
+    sessionStorage.removeItem('usuario');
+    navigate('/');
+  };
+
   useEffect(() => {
     carregarProdutos();
   }, []);
 
   return (
-    <div>
-      {/* Nav*/}
+    <>
+      {/* Navbar */}
       <nav style={navStyle}>
-        <div style={{ fontWeight: 'bold', color: '#003366' }}>🔷 Estoque Fácil</div>
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <a href="/produto" style={linkStyle}>Produtos</a>
-          <a href="/venda" style={linkStyle}>Vendas</a>
-          <span>Olá, {sessionStorage.getItem('usuario')}</span>
-          <button
-            onClick={() => {
-              sessionStorage.removeItem('usuario');
-              window.location.href = '/';
-            }}
-            style={logoutButton}
-          >
-            Sair
-          </button>
+        <div style={navBrand}>🔷 Estoque Fácil</div>
+        <div style={navLinks}>
+          <a href="/produto" style={navLink}>Produtos</a>
+          <a href="/venda" style={navLink}>Vendas</a>
+          <span style={navUser}>Olá, {sessionStorage.getItem('usuario')}</span>
+          <button onClick={logout} style={logoutButton}>Sair</button>
         </div>
       </nav>
 
-      <div style={container}>
+      <div style={pageContainer}>
         <h2 style={title}>Cadastro de Produtos</h2>
 
         <form onSubmit={handleSubmit} style={form}>
-          <div style={inputGroup}>
-            <label>Nome do Produto</label>
-            <input
-              type="text"
-              name="name"
-              value={values.name}
-              onChange={handleChange}
-              placeholder="Ex: Caneta"
-              required
-              style={inputStyle}
-            />
+          <div style={inputRow}>
+            <div style={inputGroup}>
+              <label style={labelStyle}>Nome do Produto</label>
+              <input
+                type="text"
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                placeholder="Ex: Caneta"
+                required
+                style={inputStyle}
+              />
+            </div>
+
+            <div style={inputGroup}>
+              <label style={labelStyle}>Quantidade</label>
+              <input
+                type="number"
+                name="quantidade"
+                value={values.quantidade}
+                onChange={handleChange}
+                placeholder="0"
+                required
+                min="0"
+                style={inputStyle}
+              />
+            </div>
+
+            <div style={inputGroup}>
+              <label style={labelStyle}>Valor (R$)</label>
+              <input
+                type="number"
+                name="valor"
+                step="0.01"
+                value={values.valor}
+                onChange={handleChange}
+                placeholder="0.00"
+                required
+                style={inputStyle}
+              />
+            </div>
           </div>
-          <div style={inputGroup}>
-            <label>Quantidade</label>
-            <input
-              type="number"
-              name="quantidade"
-              value={values.quantidade}
-              onChange={handleChange}
-              placeholder="0"
-              required
-              min="0"
-              style={inputStyle}
-            />
-          </div>
-          <div style={inputGroup}>
-            <label>Valor (R$)</label>
-            <input
-              type="number"
-              name="valor"
-              step="0.01"
-              value={values.valor}
-              onChange={handleChange}
-              placeholder="0.00"
-              required
-              style={inputStyle}
-            />
-          </div>
-          <button type="submit" style={buttonStyle}>Cadastrar</button>
+
+          <button type="submit" style={btnPrimary}>Cadastrar</button>
         </form>
 
         <h2 style={title}>Produtos Cadastrados</h2>
@@ -154,16 +153,18 @@ const Produto = () => {
                 <tr key={p.id}>
                   <td>{p.nameProduto}</td>
                   <td>{p.quantidadeProduto}</td>
-                  <td>R$ {p.valor?.toFixed(2) || '0.00'}</td>
+                  <td>R$ {p.valor?.toFixed(2)}</td>
                   <td>
                     {p.quantidadeProduto <= 0 ? (
-                      <span style={{ color: 'red' }}>Esgotado</span>
+                      <span style={statusEsgotado}>Esgotado</span>
+                    ) : p.quantidadeProduto <= 5 ? (
+                      <span style={statusBaixo}>Baixo</span>
                     ) : (
-                      <span style={{ color: 'green' }}>Disponível</span>
+                      <span style={statusOk}>Disponível</span>
                     )}
                   </td>
                   <td>
-                    <button onClick={() => handleDelete(p.nameProduto)} style={deleteButton}>
+                    <button onClick={() => handleDelete(p.nameProduto)} style={btnDelete}>
                       Excluir
                     </button>
                   </td>
@@ -177,23 +178,45 @@ const Produto = () => {
       <footer style={footerStyle}>
         Sistema de Controle de Estoque - Projeto Acadêmico ADS
       </footer>
-    </div>
+    </>
   );
 };
 
-// Estilos
+
 const navStyle = {
-  padding: '10px 20px',
-  backgroundColor: '#e6f2ff',
+  padding: '12px 20px',
+  backgroundColor: '#ffffff',
+  borderBottom: '1px solid #ddd',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  borderBottom: '1px solid #ccc'
+  position: 'sticky',
+  top: 0,
+  zIndex: 100,
+  boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
 };
 
-const linkStyle = {
+const navBrand = {
+  fontWeight: 'bold',
+  color: '#003366',
+  fontSize: '18px'
+};
+
+const navLinks = {
+  display: 'flex',
+  gap: '20px',
+  alignItems: 'center'
+};
+
+const navLink = {
   color: '#003366',
   textDecoration: 'none',
+  fontSize: '14px',
+  fontWeight: '500'
+};
+
+const navUser = {
+  color: '#555',
   fontSize: '14px'
 };
 
@@ -201,16 +224,17 @@ const logoutButton = {
   background: '#cc0000',
   color: 'white',
   border: 'none',
-  padding: '5px 10px',
+  padding: '6px 10px',
   borderRadius: '4px',
   fontSize: '12px',
   cursor: 'pointer'
 };
 
-const container = {
-  maxWidth: '900px',
-  margin: '20px auto',
-  padding: '20px'
+const pageContainer = {
+  minHeight: 'calc(100vh - 100px)',
+  padding: '20px',
+  backgroundColor: '#f0f4f8',
+  marginTop: '0'
 };
 
 const title = {
@@ -225,31 +249,37 @@ const form = {
   marginBottom: '30px'
 };
 
-const inputGroup = {
+const inputRow = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  gap: '15px',
   marginBottom: '15px'
+};
+
+const inputGroup = {
+  display: 'flex',
+  flexDirection: 'column'
+};
+
+const labelStyle = {
+  fontSize: '14px',
+  color: '#555',
+  marginBottom: '5px'
 };
 
 const inputStyle = {
   width: '100%',
   padding: '10px',
   border: '1px solid #ccc',
-  borderRadius: '4px'
+  borderRadius: '6px',
+  fontSize: '14px'
 };
 
-const buttonStyle = {
+const btnPrimary = {
   background: '#003366',
   color: 'white',
   border: 'none',
   padding: '10px 20px',
-  borderRadius: '4px',
-  cursor: 'pointer'
-};
-
-const deleteButton = {
-  background: '#cc0000',
-  color: 'white',
-  border: 'none',
-  padding: '5px 10px',
   borderRadius: '4px',
   cursor: 'pointer'
 };
@@ -260,11 +290,37 @@ const tableStyle = {
   marginTop: '20px'
 };
 
+const statusOk = {
+  color: 'green',
+  fontWeight: 'normal'
+};
+
+const statusBaixo = {
+  color: '#cc7700',
+  fontWeight: 'normal'
+};
+
+const statusEsgotado = {
+  color: 'red',
+  fontWeight: 'normal'
+};
+
+const btnDelete = {
+  background: '#f44336',
+  color: 'white',
+  border: 'none',
+  padding: '5px 10px',
+  borderRadius: '4px',
+  cursor: 'pointer'
+};
+
 const footerStyle = {
   textAlign: 'center',
-  margin: '40px 0 20px',
+  padding: '20px 0',
+  color: '#777',
   fontSize: '12px',
-  color: '#777'
+  borderTop: '1px solid #eee',
+  backgroundColor: '#f8f9fa'
 };
 
 export default Produto;
