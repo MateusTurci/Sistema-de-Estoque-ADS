@@ -174,17 +174,17 @@ const Venda = () => {
           <strong> Total:</strong> R$ {totalValor.toFixed(2)}
         </div>
 
-        {/* Tabela */}
+        {/* Tabela */} 
         <table style={tableStyle}>
           <thead>
-            <tr style={{ backgroundColor: '#f0f0f0' }}>
-              <th>Produto</th>
-              <th>Quantidade</th>
-              <th>Unitário</th>
-              <th>Total</th>
-              <th>Usuário</th>
-              <th>Data</th>
-              <th>Ação</th>
+            <tr>
+              <th style={thStyle}>Produto</th>
+              <th style={{ ...thStyle, width: '80px' }}>Quantidade</th>
+              <th style={{ ...thStyle, width: '100px' }}>Unitário</th>
+              <th style={{ ...thStyle, width: '100px' }}>Total</th>
+              <th style={{ ...thStyle, width: '120px' }}>Usuário</th>
+              <th style={{ ...thStyle, width: '120px' }}>Data</th>
+              <th style={{ ...thStyle, width: '80px' }}>Ação</th>
             </tr>
           </thead>
           <tbody>
@@ -197,12 +197,12 @@ const Venda = () => {
             ) : (
               vendasFiltradas.map((v, k) => (
                 <tr key={k}>
-                  <td>{v.nameProduto}</td>
-                  <td>{v.quantidadeProduto}</td>
-                  <td>R$ {v.valorUnitario?.toFixed(2)}</td>
-                  <td>R$ {v.valorTotal?.toFixed(2)}</td>
-                  <td>{v.usuario}</td>
-                  <td>{new Date(v.dataHora).toLocaleDateString()}</td>
+                  <td style={tdStyle}>{v.nameProduto}</td>
+                  <td style={tdStyle}>{v.quantidadeProduto}</td>
+                  <td style={tdStyle}>R$ {v.valorUnitario?.toFixed(2)}</td>
+                  <td style={tdStyle}>R$ {v.valorTotal?.toFixed(2)}</td>
+                  <td style={tdStyle}>{v.usuario}</td>
+                  <td style={tdStyle}>{new Date(v.dataHora).toLocaleDateString()}</td>
                   <td>
                     <button onClick={() => handleDelete(v.nameProduto)} style={btnDelete}>
                       Excluir
@@ -332,9 +332,24 @@ const btnPrimary = {
 const tableStyle = {
   width: '100%',
   borderCollapse: 'collapse',
-  marginTop: '20px'
+  marginTop: '10px'
+};
+;
+const thStyle = {
+  textAlign: 'left',
+  padding: '20px',
+  backgroundColor: '#f0f0f0',
+  fontWeight: '1000',
+  fontSize: '15px',
+  whiteSpace: 'nowrap' 
 };
 
+const tdStyle = {
+  padding: '15px',
+  borderBottom: '2px solid #ddd',
+  textAlign: 'left',
+  fontSize: '15px'
+}
 const filtroBox = {
   display: 'flex',
   gap: '10px',

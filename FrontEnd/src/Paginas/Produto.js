@@ -133,12 +133,12 @@ const Produto = () => {
         <h2 style={title}>Produtos Cadastrados</h2>
         <table style={tableStyle}>
           <thead>
-            <tr style={{ backgroundColor: '#f0f0f0' }}>
-              <th>Produto</th>
-              <th>Quantidade</th>
-              <th>Valor</th>
-              <th>Status</th>
-              <th>Ação</th>
+            <tr>
+            <th style={thStyle}>Produto</th>
+              <th style={{ ...thStyle, width: '80px' }}>Quantidade</th> 
+              <th style={{ ...thStyle, width: '100px' }}>Valor</th>
+              <th style={{ ...thStyle, width: '80px' }}>Status</th>
+              <th style={{ ...thStyle, width: '80px' }}>Ação</th>
             </tr>
           </thead>
           <tbody>
@@ -151,10 +151,10 @@ const Produto = () => {
             ) : (
               produtos.map((p) => (
                 <tr key={p.id}>
-                  <td>{p.nameProduto}</td>
-                  <td>{p.quantidadeProduto}</td>
-                  <td>R$ {p.valor?.toFixed(2)}</td>
-                  <td>
+                  <td style={tdStyle}>{p.nameProduto}</td>
+                  <td style={tdStyle}>{p.quantidadeProduto}</td>
+                  <td style={tdStyle}>R$ {p.valor?.toFixed(2)}</td>
+                  <td style={tdStyle}>
                     {p.quantidadeProduto <= 0 ? (
                       <span style={statusEsgotado}>Esgotado</span>
                     ) : p.quantidadeProduto <= 5 ? (
@@ -287,7 +287,23 @@ const btnPrimary = {
 const tableStyle = {
   width: '100%',
   borderCollapse: 'collapse',
-  marginTop: '20px'
+  marginTop: '10px'
+};
+
+const thStyle = {
+  textAlign: 'left',
+  padding: '20px',
+  backgroundColor: '#f0f0f0',
+  fontWeight: '1000',
+  fontSize: '15px',
+  whiteSpace: 'nowrap' 
+};
+
+const tdStyle = {
+  padding: '15px',
+  borderBottom: '2px solid #ddd',
+  textAlign: 'left',
+  fontSize: '15px'
 };
 
 const statusOk = {
