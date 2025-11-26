@@ -289,7 +289,7 @@ const tableStyle = {
   borderCollapse: 'collapse',
   marginTop: '10px'
 };
-
+;
 const thStyle = {
   textAlign: 'left',
   padding: '20px',
@@ -304,7 +304,7 @@ const tdStyle = {
   borderBottom: '2px solid #ddd',
   textAlign: 'left',
   fontSize: '15px'
-};
+}
 
 const statusOk = {
   color: 'green',

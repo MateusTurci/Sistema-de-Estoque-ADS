@@ -174,6 +174,13 @@ const Venda = () => {
           <strong> Total:</strong> R$ {totalValor.toFixed(2)}
         </div>
 
+        {/* Botão de impressão */}
+        <div style={printBox}>
+           <button onClick={() => window.print()} style={btnPrint}>
+            Imprimir Relatório de Vendas
+           </button>
+        </div>
+
         {/* Tabela */} 
         <table style={tableStyle}>
           <thead>
@@ -388,6 +395,21 @@ const footerStyle = {
   fontSize: '12px',
   borderTop: '1px solid #eee',
   backgroundColor: '#f8f9fa'
+};
+
+const printBox = {
+  marginTop: '20px',
+  textAlign: 'center'
+};
+
+const btnPrint = {
+  background: '#0066cc',
+  color: 'white',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  fontSize: '14px'
 };
 
 export default Venda;
